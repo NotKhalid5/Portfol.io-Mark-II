@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Khalid Enahora — Project Catalog</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080818;color:#ccd6f6;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+/* --- Header --- */
+.app-header{text-align:center;padding:4rem 2rem 2.5rem;position:relative;overflow:hidden}
+.header-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:200px;background:radial-gradient(ellipse,rgba(100,200,255,.07) 0%,transparent 70%);pointer-events:none}
+h1.header-title{font-size:clamp(1.8rem,5vw,3rem);font-weight:800;color:#e8e8ff;letter-spacing:.02em}
+.title-accent{color:#64c8ff;font-weight:400}
+.header-sub{font-size:.85rem;color:rgba(255,255,255,.28);letter-spacing:.25em;text-transform:uppercase;margin-top:.5rem}
+/* --- Filter --- */
+.filter-container{display:flex;flex-wrap:wrap;gap:1.25rem;align-items:flex-start;padding:1.1rem 2rem;margin-bottom:1.5rem;background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.filter-section{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap}
+.filter-label{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.28);white-space:nowrap}
+.filter-select{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#ccd6f6;font-size:.8rem;padding:5px 10px;cursor:pointer;outline:none;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.filter-select option{background:#1a1a2e}
+.tag-list{display:flex;flex-wrap:wrap;gap:5px}
+.filter-tag{font-size:9px;font-weight:600;letter-spacing:.05em;padding:3px 10px;background:transparent;border:1px solid rgba(255,255,255,.12);color:#8892b0;cursor:pointer;clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);transition:all .18s}
+.filter-tag:hover{border-color:rgba(255,255,255,.3);color:#ccd6f6}
+.filter-tag.active{background:rgba(100,200,255,.12);border-color:#64c8ff;color:#64c8ff}
+/* --- Grid --- */
+.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.75rem;padding:1.25rem 2rem 4rem;max-width:1200px;margin:0 auto}
+/* --- Cards --- */
+.card-wrapper{position:relative;cursor:pointer;transition:transform .25s ease}
+.card-wrapper:hover{transform:translateY(-6px) scale(1.02)}
+.card-angular{background:linear-gradient(145deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);padding:1.4rem;position:relative;z-index:1;transition:background .3s}
+.card-wrapper:hover .card-angular{background:linear-gradient(145deg,#1e1e35 0%,#1a2848 60%,#133a70 100%)}
+.card-border-glow{position:absolute;inset:-2px;z-index:0;opacity:0;transition:opacity .3s}
+.card-wrapper:hover .card-border-glow{opacity:.3}
+.card-inner{display:flex;flex-direction:column;gap:.55rem;min-height:190px}
+.card-type-badge{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.card-title{font-size:1.2rem;font-weight:700;color:#e8e8ff;line-height:1.2}
+.card-desc{font-size:.8rem;color:#8892b0;line-height:1.55;flex:1}
+.card-stack{display:flex;flex-wrap:wrap;gap:5px;margin-top:.2rem}
+.stack-pill{font-size:9px;padding:3px 8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#a8b2d8;clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);letter-spacing:.03em}
+.stack-pill.muted{color:#5a6680;border-color:rgba(255,255,255,.06)}
+.card-cta{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:0;transition:opacity .25s}
+.card-wrapper:hover .card-cta{opacity:1}
+.cta-arrow{font-size:1.1rem;transition:transform .2s}
+.card-wrapper:hover .cta-arrow{transform:translateX(4px)}
+/* --- Project Page --- */
+.project-page{position:fixed;inset:0;z-index:100;overflow:hidden;display:none}
+.project-page.visible{display:block}
+.bg-canvas{position:absolute;inset:0;width:100%;height:100%}
+.page-overlay{position:relative;z-index:2;height:100vh;overflow-y:auto;padding:2rem;background:rgba(0,0,0,.3);backdrop-filter:blur(1px)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#e0e0ff;font-size:.82rem;font-weight:700;letter-spacing:.08em;padding:8px 18px;cursor:pointer;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);transition:all .2s;margin-bottom:2.5rem}
+.back-btn:hover{background:rgba(255,255,255,.12);color:#64c8ff;border-color:#64c8ff}
+.page-content{max-width:680px;margin:0 auto;animation:slideIn .45s ease forwards}
+@keyframes slideIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.page-type-badge{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.8;margin-bottom:.4rem}
+.page-title{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;margin:0 0 1.1rem;line-height:1.1;text-shadow:0 0 40px currentColor}
+.page-desc{font-size:1rem;color:#a8b2d8;line-height:1.7;margin:0 0 2rem;max-width:540px}
+.page-section{margin-bottom:1.6rem}
+.section-label{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin:0 0 .55rem;display:block}
+.page-pills{display:flex;flex-wrap:wrap;gap:7px}
+.page-pill{font-size:11px;font-weight:600;padding:6px 15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);color:#ccd6f6;clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%);transition:all .2s;cursor:default}
+.page-pill:hover{border-color:currentColor}
+.tag-pill{font-size:10px;padding:3px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);color:#8892b0;border-radius:2px}
+.project-link{display:inline-flex;align-items:center;font-size:.82rem;font-weight:700;letter-spacing:.06em;color:inherit;text-decoration:none;padding:9px 22px;border:1px solid currentColor;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%);transition:all .2s}
+.project-link:hover{background:currentColor;color:#000}
+</style>
+</head>
+<body>
+
+<!-- MAIN CATALOG VIEW -->
+<div id="catalog-view">
+  <div class="app-header">
+    <div class="header-glow"></div>
+    <h1 class="header-title">
+      <span class="title-accent">&lt;</span>Khalid Enahora<span class="title-accent">/&gt;</span>
+    </h1>
+    <p class="header-sub">Project Catalog</p>
+  </div>
+
+  <div class="filter-container">
+    <div class="filter-section">
+      <span class="filter-label">Genre</span>
+      <select class="filter-select" id="genre-select">
+        <option value="all">All</option>
+        <option value="OS">OS</option>
+        <option value="Full Stack">Full Stack</option>
+        <option value="CLI Tool">CLI Tool</option>
+        <option value="Web App">Web App</option>
+        <option value="Game Dev">Game Dev</option>
+        <option value="System Software">System Software</option>
+      </select>
+    </div>
+    <div class="filter-section" style="flex:1">
+      <span class="filter-label">Tags</span>
+      <div class="tag-list" id="tag-list"></div>
+    </div>
+  </div>
+
+  <div class="project-grid" id="project-grid"></div>
+</div>
+
+<!-- PROJECT DETAIL PAGE -->
+<div class="project-page" id="project-page">
+  <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="page-overlay">
+    <button class="back-btn" id="back-btn">‹ Back</button>
+    <div class="page-content" id="page-content"></div>
+  </div>
+</div>
+
+<script>
+const PROJECTS = [
+  { name:"TerminalOS", desc:"A custom Unix-like OS with kernel-level process management and virtual filesystem.", type:"OS", stack:["C","Assembly","QEMU"], tags:["Systems","Low-Level","C"], links:["https://github.com"], accent:"#00ffcc", anim:"matrix", clips:0 },
+  { name:"NeuralMesh", desc:"Full-stack neural network visualizer with real-time training metrics and layer inspection.", type:"Full Stack", stack:["React","Python","TensorFlow","WebSockets"], tags:["AI","React","Python"], links:["https://github.com"], accent:"#a855f7", anim:"pulse", clips:1 },
+  { name:"AetherCLI", desc:"A blazing-fast CLI toolkit for automating dev workflows with plugin architecture.", type:"CLI Tool", stack:["Rust","TOML","Shell"], tags:["CLI","Rust","DevTools"], links:["https://github.com"], accent:"#f97316", anim:"stars", clips:2 },
+  { name:"PixelForge", desc:"Browser-based pixel art editor with layers, animation frames, and export tools.", type:"Web App", stack:["TypeScript","Canvas API","IndexedDB"], tags:["Creative","TypeScript","Canvas"], links:["https://github.com"], accent:"#ec4899", anim:"petals", clips:3 },
+  { name:"ChronoQuest", desc:"Top-down RPG with time-manipulation mechanics built in a custom ECS game engine.", type:"Game Dev", stack:["C++","SFML","Lua"], tags:["Game","C++","ECS"], links:["https://github.com"], accent:"#eab308", anim:"fire", clips:4 },
+  { name:"DataWeave", desc:"Visual ETL pipeline builder with drag-and-drop nodes and real-time data preview.", type:"Full Stack", stack:["React","Node.js","PostgreSQL","D3.js"], tags:["Data","React","Node.js"], links:["https://github.com"], accent:"#06b6d4", anim:"waves", clips:5 },
+  { name:"HexCompiler", desc:"A toy programming language compiler that targets x86 assembly with LLVM backend.", type:"System Software", stack:["Haskell","LLVM","x86"], tags:["Compilers","Haskell","LLVM"], links:["https://github.com"], accent:"#22d3ee", anim:"grid", clips:0 },
+  { name:"VaultSync", desc:"End-to-end encrypted file sync service with conflict resolution and version history.", type:"Full Stack", stack:["Go","React","SQLite","AES-256"], tags:["Security","Go","React"], links:["https://github.com"], accent:"#4ade80", anim:"lightning", clips:1 },
+];
+
+const CLIP_PATHS = [
+  'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px))',
+  'polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%)',
+  'polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px)',
+  'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px))',
+  'polygon(0 0, 100% 0, 100% 100%, 30px 100%, 0 calc(100% - 30px))',
+  'polygon(0 16px, 16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%)',
+];
+
+let selectedGenre = 'all';
+let selectedTags = [];
+let animId = null;
+let t = 0;
+
+const allTags = [...new Set(PROJECTS.flatMap(p => p.tags))];
+
+function buildTagList() {
+  const el = document.getElementById('tag-list');
+  el.innerHTML = allTags.map(tag => `<button class="filter-tag" data-tag="${tag}">${tag}</button>`).join('');
+  el.querySelectorAll('.filter-tag').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag;
+      if (selectedTags.includes(tag)) {
+        selectedTags = selectedTags.filter(t => t !== tag);
+        btn.classList.remove('active');
+      } else {
+        selectedTags.push(tag);
+        btn.classList.add('active');
+      }
+      renderGrid();
+    });
+  });
+}
+
+function renderGrid() {
+  const filtered = PROJECTS.filter(p => {
+    const g = selectedGenre === 'all' || p.type === selectedGenre;
+    const t2 = selectedTags.length === 0 || selectedTags.every(t => p.tags.includes(t));
+    return g && t2;
+  });
+  const grid = document.getElementById('project-grid');
+  grid.innerHTML = filtered.map((p, i) => {
+    const clip = CLIP_PATHS[p.clips];
+    const pills = p.stack.slice(0,3).map(s => `<span class="stack-pill">${s}</span>`).join('');
+    const extra = p.stack.length > 3 ? `<span class="stack-pill muted">+${p.stack.length-3}</span>` : '';
+    return `
+      <div class="card-wrapper" data-name="${p.name}" style="--accent:${p.accent}">
+        <div class="card-angular" style="clip-path:${clip}">
+          <div class="card-inner">
+            <div class="card-type-badge" style="color:${p.accent}">${p.type}</div>
+            <h3 class="card-title">${p.name}</h3>
+            <p class="card-desc">${p.desc}</p>
+            <div class="card-stack">${pills}${extra}</div>
+            <div class="card-cta" style="color:${p.accent}"><span>View Project</span><span class="cta-arrow">›</span></div>
+          </div>
+        </div>
+        <div class="card-border-glow" style="clip-path:${clip};background:${p.accent}"></div>
+      </div>`;
+  }).join('');
+  grid.querySelectorAll('.card-wrapper').forEach(card => {
+    card.addEventListener('click', () => openProject(card.dataset.name));
+  });
+}
+
+function openProject(name) {
+  const p = PROJECTS.find(x => x.name === name);
+  if (!p) return;
+  document.getElementById('catalog-view').style.display = 'none';
+  const page = document.getElementById('project-page');
+  page.classList.add('visible');
+  t = 0;
+
+  const content = document.getElementById('page-content');
+  const pillsHtml = p.stack.map(s => `<span class="page-pill" style="border-color:rgba(255,255,255,.15)">${s}</span>`).join('');
+  const tagsHtml = p.tags.map(s => `<span class="tag-pill">${s}</span>`).join('');
+  const linksHtml = p.links.map(l => `<a href="${l}" target="_blank" class="project-link" style="color:${p.accent};border-color:${p.accent}">View on GitHub ↗</a>`).join('');
+
+  content.innerHTML = `
+    <div class="page-type-badge" style="color:${p.accent}">${p.type}</div>
+    <h1 class="page-title" style="color:${p.accent}">${p.name}</h1>
+    <p class="page-desc">${p.desc}</p>
+    <div class="page-section"><span class="section-label">Tech Stack</span><div class="page-pills">${pillsHtml}</div></div>
+    <div class="page-section"><span class="section-label">Tags</span><div class="page-pills">${tagsHtml}</div></div>
+    <div class="page-section"><span class="section-label">Links</span><div class="page-pills">${linksHtml}</div></div>
+  `;
+
+  if (animId) cancelAnimationFrame(animId);
+  startAnimation(p);
+}
+
+function closeProject() {
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
+  document.getElementById('catalog-view').style.display = 'block';
+  document.getElementById('project-page').classList.remove('visible');
+}
+
+document.getElementById('back-btn').addEventListener('click', closeProject);
+document.getElementById('genre-select').addEventListener('change', e => { selectedGenre = e.target.value; renderGrid(); });
+
+function startAnimation(p) {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  if (p.anim === 'matrix') {
+    const cols = Math.floor(canvas.width / 14);
+    const drops = Array(cols).fill(0).map(() => Math.random() * canvas.height);
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0,8,20,.06)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.font = '13px monospace';
+      drops.forEach((y,i) => {
+        const ch = chars[Math.floor(Math.random()*chars.length)];
+        ctx.fillStyle = i%5===0 ? '#fff' : '#00ffcc';
+        ctx.globalAlpha = .6+Math.random()*.4;
+        ctx.fillText(ch, i*14, y);
+        drops[i] = y > canvas.height && Math.random() > .975 ? 0 : y+14;
+      });
+      ctx.globalAlpha=1; animId=requestAnimationFrame(draw);
+    };
+    ctx.fillStyle='#000814'; ctx.fillRect(0,0,canvas.width,canvas.height); draw();
+  }
+
+  else if (p.anim === 'stars') {
+    const stars = Array.from({length:200},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+.5,speed:Math.random()*.4+.1,tw:Math.random()*Math.PI*2}));
+    const nebula = Array.from({length:5},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*130+70,c:['#f97316','#a855f7','#06b6d4','#ec4899'][Math.floor(Math.random()*4)]}));
+    const draw = () => {
+      ctx.fillStyle='#030014'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      nebula.forEach(n=>{const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);g.addColorStop(0,n.c+'30');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();});
+      t+=.01; stars.forEach(s=>{s.tw+=.04;ctx.globalAlpha=.4+Math.sin(s.tw)*.3;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();s.y-=s.speed;if(s.y<0){s.y=canvas.height;s.x=Math.random()*canvas.width;}});
+      ctx.globalAlpha=1; animId=requestAnimationFrame(draw);
+    }; draw();
+  }
+
+  else if (p.anim === 'petals') {
+    const petals = Array.from({length:60},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,sz:Math.random()*14+6,sp:Math.random()*1.5+.5,dr:Math.random()*2-1,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.05,al:Math.random()*.6+.3}));
+    const draw = () => {
+      ctx.fillStyle='#0a0518'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      petals.forEach(p2=>{
+        p2.y+=p2.sp; p2.x+=p2.dr+Math.sin(t*.5+p2.y*.01)*.5; p2.rot+=p2.rs;
+        if(p2.y>canvas.height+20){p2.y=-20;p2.x=Math.random()*canvas.width;}
+        ctx.save(); ctx.translate(p2.x,p2.y); ctx.rotate(p2.rot); ctx.globalAlpha=p2.al;
+        ctx.fillStyle='#ffb7c5'; ctx.beginPath(); ctx.ellipse(0,0,p2.sz/2,p2.sz,0,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#ff85a2'; ctx.beginPath(); ctx.ellipse(0,0,p2.sz/4,p2.sz/2,0,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+      });
+      ctx.globalAlpha=1; t+=.016; animId=requestAnimationFrame(draw);
+    }; draw();
+  }
+
+  else if (p.anim === 'fire') {
+    const parts = Array.from({length:120},()=>({x:canvas.width/2+(Math.random()-.5)*300,y:canvas.height+10,vx:(Math.random()-.5)*2,vy:-(Math.random()*4+2),life:Math.random(),ml:Math.random()*60+40,sz:Math.random()*8+3}));
+    const draw = () => {
+      ctx.fillStyle='rgba(5,2,0,.25)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      parts.forEach(p2=>{
+        p2.x+=p2.vx+Math.sin(t*2+p2.y*.01)*.5; p2.y+=p2.vy; p2.life+=1/p2.ml; p2.vy-=.05;
+        if(p2.life>=1){p2.x=canvas.width/2+(Math.random()-.5)*300;p2.y=canvas.height+10;p2.vx=(Math.random()-.5)*2;p2.vy=-(Math.random()*4+2);p2.life=0;p2.ml=Math.random()*60+40;}
+        const al=Math.sin(p2.life*Math.PI)*.9;
+        const g2=Math.floor(p2.life<.5?p2.life*2*180:(1-p2.life)*2*180);
+        ctx.globalAlpha=al; ctx.fillStyle=`rgb(255,${g2},0)`;
+        ctx.beginPath(); ctx.arc(p2.x,p2.y,p2.sz*(1-p2.life*.5),0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha=1; t+=.02; animId=requestAnimationFrame(draw);
+    }; ctx.fillStyle='#050200'; ctx.fillRect(0,0,canvas.width,canvas.height); draw();
+  }
+
+  else if (p.anim === 'waves') {
+    const draw = () => {
+      ctx.fillStyle='#000d1a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      for(let w=0;w<7;w++){
+        ctx.beginPath(); ctx.moveTo(0,canvas.height/2);
+        for(let x=0;x<=canvas.width;x+=5){const y=canvas.height/2+Math.sin(x*.008+t+w*.8)*(40+w*12)+Math.sin(x*.015-t*1.3+w)*(20+w*5);ctx.lineTo(x,y);}
+        ctx.lineTo(canvas.width,canvas.height); ctx.lineTo(0,canvas.height); ctx.closePath();
+        const al=.08-w*.007;
+        ctx.fillStyle=`rgba(6,182,212,${al})`; ctx.fill();
+        ctx.strokeStyle=`rgba(6,182,212,${al*3})`; ctx.lineWidth=1.5; ctx.stroke();
+      }
+      t+=.012; animId=requestAnimationFrame(draw);
+    }; draw();
+  }
+
+  else if (p.anim === 'pulse') {
+    const nodes = Array.from({length:30},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,r:Math.random()*4+2,pulse:Math.random()*Math.PI*2}));
+    const draw = () => {
+      ctx.fillStyle='rgba(5,0,15,.2)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;n.pulse+=.04;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;});
+      nodes.forEach((a,i)=>{
+        nodes.slice(i+1).forEach(b=>{const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<180){ctx.globalAlpha=(1-dist/180)*.4;ctx.strokeStyle='#a855f7';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}});
+        const pu=Math.sin(n.pulse)*2; ctx.globalAlpha=.6+Math.sin(n.pulse)*.3; ctx.fillStyle='#a855f7'; ctx.beginPath(); ctx.arc(n.x,n.y,n.r+pu,0,Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha=1; animId=requestAnimationFrame(draw);
+    }; ctx.fillStyle='#05000f'; ctx.fillRect(0,0,canvas.width,canvas.height); draw();
+  }
+
+  else if (p.anim === 'grid') {
+    const draw = () => {
+      ctx.fillStyle='#000a10'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      const size=40,pu=Math.sin(t*.8)*.3+.4;
+      for(let x=0;x<canvas.width;x+=size){for(let y=0;y<canvas.height;y+=size){const dx=x-canvas.width/2,dy=y-canvas.height/2,dist=Math.sqrt(dx*dx+dy*dy),wave=Math.sin(dist*.03-t*2)*.5+.5;ctx.globalAlpha=wave*pu*.6;ctx.strokeStyle='#22d3ee';ctx.lineWidth=.5;ctx.strokeRect(x,y,size,size);}}
+      ctx.globalAlpha=1; t+=.025; animId=requestAnimationFrame(draw);
+    }; draw();
+  }
+
+  else if (p.anim === 'lightning') {
+    let next=0;
+    const bolts=[];
+    const genBolt=(x,y)=>{const segs=[{x,y}];let cx=x,cy=y;while(cy<canvas.height){cx+=(Math.random()-.5)*80;cy+=Math.random()*60+20;segs.push({x:cx,y:cy});}return{segs,al:1};};
+    const draw = () => {
+      ctx.fillStyle='rgba(2,8,2,.3)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      next--;
+      if(next<=0){bolts.push(genBolt(Math.random()*canvas.width,0));next=Math.floor(Math.random()*80+30);}
+      for(let i=bolts.length-1;i>=0;i--){
+        const b=bolts[i];
+        ctx.globalAlpha=b.al; ctx.strokeStyle='#4ade80'; ctx.lineWidth=1.5; ctx.shadowColor='#4ade80'; ctx.shadowBlur=8;
+        ctx.beginPath(); ctx.moveTo(b.segs[0].x,b.segs[0].y); b.segs.slice(1).forEach(s=>ctx.lineTo(s.x,s.y)); ctx.stroke();
+        ctx.shadowBlur=0; b.al-=.04; if(b.al<=0)bolts.splice(i,1);
+      }
+      ctx.globalAlpha=1; animId=requestAnimationFrame(draw);
+    }; ctx.fillStyle='#020802'; ctx.fillRect(0,0,canvas.width,canvas.height); draw();
+  }
+}
+
+buildTagList();
+renderGrid();
+</script>
+</body>
+</html>

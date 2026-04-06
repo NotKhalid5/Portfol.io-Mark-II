@@ -1,0 +1,118 @@
+.card-wrapper {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.card-wrapper:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+.card-angular {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.card-wrapper:hover .card-angular {
+  background: linear-gradient(145deg, #1e1e35 0%, #1a2848 60%, #133a70 100%);
+}
+
+.card-border-glow {
+  position: absolute;
+  inset: -2px;
+  background: var(--accent, #00ffcc);
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-wrapper:hover .card-border-glow {
+  opacity: 0.35;
+}
+
+.card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+  min-height: 200px;
+}
+
+.card-type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent, #00ffcc);
+  opacity: 0.85;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e8e8ff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-desc {
+  font-size: 0.82rem;
+  color: #8892b0;
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
+}
+
+.card-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0.25rem;
+}
+
+.stack-pill {
+  font-size: 10px;
+  padding: 3px 9px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a8b2d8;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  letter-spacing: 0.04em;
+}
+
+.stack-pill.muted {
+  color: #5a6680;
+  border-color: rgba(255,255,255,0.06);
+}
+
+.card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent, #00ffcc);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.card-wrapper:hover .card-cta {
+  opacity: 1;
+}
+
+.cta-arrow {
+  font-size: 1.2rem;
+  line-height: 1;
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.card-wrapper:hover .cta-arrow {
+  transform: translateX(4px);
+}
